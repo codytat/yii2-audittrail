@@ -16,6 +16,7 @@ use yii\db\ActiveRecord;
  * @var string $stamp
  * @var integer $user_id
  * @var string $model_id
+ * @var string $user_ip
  */
 class AuditTrail extends ActiveRecord
 {
@@ -70,6 +71,7 @@ class AuditTrail extends ActiveRecord
 			'stamp' => Yii::t('audittrail','Stamp'),
 			'user_id' => Yii::t('audittrail','User'),
 			'model_id' => Yii::t('audittrail','ID'),
+			'user_ip' => Yii::t('audittrail','IP Address'),
 		];
 	}
 
@@ -85,6 +87,7 @@ class AuditTrail extends ActiveRecord
 			['field', 'string', 'max' => 255],
 			['model_id', 'string', 'max' => 255],
 			['user_id', 'string', 'max' => 255],
+			['user_ip', 'string', 'max' => 255],
 			[['old_value', 'new_value'], 'safe']
 		];
 	}
@@ -99,7 +102,7 @@ class AuditTrail extends ActiveRecord
 		if(isset(Yii::$app->params['audittrail.model']) && isset(Yii::$app->params['audittrail.model'])){
 			return $this->hasOne(Yii::$app->params['audittrail.model'], ['id' => 'user_id']);
 		}else{
-			return $this->hasOne('common\models\User', ['id' => 'user_id']);
+			return $this->hasOne('common\models\SystemUser', ['id' => 'user_id']);
 		}
 	}
 
