@@ -147,6 +147,13 @@ class LoggableBehavior extends Behavior
         		$log->model = $className;
         	}
 
+            if ($action == self::ACTION_DELETE) {
+                $data = $this->owner->getAttributes();
+                if (!$old_value) {
+                    $old_value =  json_encode($data);
+                }
+            }
+
             $log->old_value = $old_value;
             $log->new_value = $value;
             $log->action = $action;
@@ -154,6 +161,7 @@ class LoggableBehavior extends Behavior
             $log->field = $name;
             $log->stamp = $this->storeTimestamp ? time() : date($this->dateFormat); // If we are storing a timestamp lets get one else lets get the date
             $log->user_id = (string) $this->getUserId(); // Lets get the user id
+            $log->user_ip = (string) $this->getUserIp(); // Lets get the user IP address
             return $log->save();
         } else {
             return true;
@@ -183,6 +191,17 @@ class LoggableBehavior extends Behavior
                 return null;
             }
         }
+    }
+
+    public function getUserIp()
+    {
+        try {
+            $userip = Yii::$app->getRequest()->getUserIP();
+            return empty($userip) ? null : $userip;
+        } catch (Exception $e) { //If we have no user object, this must be a command line program
+            return null;
+        }
+
     }
 
     protected function getNormalizedPk()
