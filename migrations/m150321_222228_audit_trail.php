@@ -23,14 +23,16 @@ class m150321_222228_audit_trail extends Migration
     			'stamp' => Schema::TYPE_DATETIME . ' NOT NULL',
     			'user_id' => Schema::TYPE_STRING,
     			'model_id' => Schema::TYPE_STRING . ' NOT NULL',
+				'user_ip' => Schema::TYPE_STRING . ' NOT NULL',
     		]
     	);
-    	
+
     	//Index these bad boys for speedy lookups
     	$this->createIndex( 'idx_audit_trail_user_id', '{{%audit_trail}}', 'user_id');
     	$this->createIndex( 'idx_audit_trail_model_id', '{{%audit_trail}}', 'model_id');
     	$this->createIndex( 'idx_audit_trail_model', '{{%audit_trail}}', 'model');
     	$this->createIndex( 'idx_audit_trail_field', '{{%audit_trail}}', 'field');
+    	$this->createIndex( 'idx_audit_trail_user_ip', '{{%audit_trail}}', 'user_ip');
     	/* http://stackoverflow.com/a/1827099/383478
     	 $this->createIndex( 'idx_audit_trail_old_value', '{{%audit_trail}}', 'old_value');
     	$this->createIndex( 'idx_audit_trail_new_value', '{{%audit_trail}}', 'new_value');
@@ -42,13 +44,13 @@ class m150321_222228_audit_trail extends Migration
     {
     	$this->dropTable( '{{%audit_trail}}' );
     }
-    
+
     // Use safeUp/safeDown to run migration code within a transaction
     public function safeUp()
     {
     	$this->up();
     }
-    
+
     public function safeDown()
     {
     	$this->down();
